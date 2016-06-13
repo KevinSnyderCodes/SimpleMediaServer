@@ -1,0 +1,177 @@
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+	<title>Simple Media Server</title>
+
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+	<link href='https://fonts.googleapis.com/css?family=Roboto:400,300' rel='stylesheet' type='text/css'>
+
+	<style>
+		.center {
+			text-align: center;
+		}
+
+		a:hover {
+			cursor: pointer;
+		}
+
+		ol {
+			list-style: decimal inside !important;
+		}
+
+		.tooltip-inner {
+			width: 300px;
+		}
+
+		#result:before {
+			text-align: center;
+		}
+
+		#result {
+			display: inline-block;
+			text-align: left;
+			margin: 0 auto;
+			margin-top: 20px;
+		}
+
+		.code {
+			font-family: 'Courier New', Courier, 'Lucida Sans Typewriter', 'Lucida Typewriter', monospace;;
+		}
+
+		table, tr, th, td {
+			border: 1px solid black;
+		}
+
+		th, td {
+			padding: 5px;
+		}
+	</style>
+	
+</head>
+
+<body>
+
+	<div class="center">
+		<h1>Simple Media Server</h1>
+		<h4><b>Team Members:</b> Kevin, Conor, Joseph</h4>
+	</div>
+
+	<div class="container">
+		<div class="row">
+			<div class="center col-sm-4 col-xs-6">
+				<h4>Relations</h4>
+				<div class="dropdown">
+				  <button class="btn btn-default dropdown-toggle" type="button" id="relations" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+				    Relations
+				    <span class="caret"></span>
+				  </button>
+				  <ul class="dropdown-menu" aria-labelledby="relations">
+				    <li><a query="SELECT * FROM User;">User</a></li>
+				    <li role="separator" class="divider"></li>
+						<li><a query="SELECT * FROM Media;">Media</a></li>
+						<li><a query="SELECT * FROM Type;">Type</a></li>
+						<li><a query="SELECT * FROM MediaAnimation;">MediaAnimation</a></li>
+						<li><a query="SELECT * FROM MediaImage;">MediaImage</a></li>
+						<li><a query="SELECT * FROM MediaVideo;">MediaVideo</a></li>
+						<li><a query="SELECT * FROM MediaAudio;">MediaAudio</a></li>
+						<li><a query="SELECT * FROM MediaGraphic;">MediaGraphic</a></li>
+						<li role="separator" class="divider"></li>
+						<li><a query="SELECT * FROM Playlist;">Playlist</a></li>
+						<li><a query="SELECT * FROM PlaylistMedia;">PlaylistMedia</a></li>
+						<li><a query="SELECT * FROM Channel;">Channel</a></li>
+						<li><a query="SELECT * FROM ChannelMedia;">ChannelMedia</a></li>
+						<li role="separator" class="divider"></li>
+						<li><a query="SELECT * FROM Favorite;">Favorite</a></li>
+						<li><a query="SELECT * FROM Tag;">Tag</a></li>
+						<li role="separator" class="divider"></li>
+						<li><a query="SELECT * FROM Post;">Post</a></li>
+						<li><a query="SELECT * FROM Message;">Message</a></li>
+						<li><a query="SELECT * FROM Comment;">Comment</a></li>
+						<li role="separator" class="divider"></li>
+						<li><a query="SELECT * FROM Download;">Download</a></li>
+				  </ul>
+				</div>
+			</div>
+			<div class="center col-sm-4 col-xs-6">
+				<h4>Queries</h4>
+				<div class="dropdown">
+				  <button class="btn btn-default dropdown-toggle" type="button" id="queries" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+				  	Queries
+				    <span class="caret"></span>
+				  </button>
+				  <ol class="dropdown-menu" aria-labelledby="queries">
+				    <li><a data-toggle="tooltip" data-placement="right" title="Returns all messages and comments that a specific user has sent (in this case, User 1)" query="CALL allPosts(1);">Posts by User</a></li>
+				    <li><a data-toggle="tooltip" data-placement="right" title="Returns the number of media items a user has uploaded, the total number of views on all of the user's media and the average views (in this case, User 5)" query="CALL userMediaInfo(5);">User Media info</a></li>
+				    <li><a data-toggle="tooltip" data-placement="right" title="Returns the user with the most media in their channel" query="SELECT USER_ID, CHANNEL_ID, maxMedia FROM Channel NATURAL JOIN ( SELECT CHANNEL_ID, MAX(numMedia) AS maxMedia FROM ( SELECT CHANNEL_ID, COUNT(MEDIA_ID) AS numMedia FROM ChannelMedia GROUP BY CHANNEL_ID ) AS countMedia ) AS maxSelect;;">User with largest Channel</a></li>
+				    <li><a data-toggle="tooltip" data-placement="right" title="Returns all users that have more than 5 media items, along with the number" query="SELECT USER_ID, COUNT(MEDIA_ID) AS numMedia FROM Media GROUP BY USER_ID HAVING numMedia > 5;">User with more than 5 Media</a></li>
+				    <li><a data-toggle="tooltip" data-placement="right" title="Returns the number of distinct media in all of the playlists" query="SELECT COUNT(DISTINCT MEDIA_ID) FROM PlaylistMedia;">Distinct Media in Playlists</a></li>
+				  </ol>
+				</div>
+			</div>
+			<div class="center col-sm-4 col-xs-12">
+				<h4>Ad-hoc Query</h4>
+				<form>
+			    <div class="input-group">
+			      <input type="text" name="query" class="form-control" placeholder="MySQL Query">
+			      <span class="input-group-btn">
+			        <button class="btn btn-default" type="submit">Run</button>
+			      </span>
+			    </div>
+			  </form>
+			</div>
+	  </div>
+
+	  <div class="center row">
+	  	<div id="result">
+	  	</div>
+	  </div>
+	</div>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+	<script>
+		$(function () {
+		  $('[data-toggle="tooltip"]').tooltip()
+		})
+
+		var $form = $("form");
+		var $result = $("#result");
+		$form.on("submit", function(e) {
+			e.preventDefault();
+			$.ajax({
+			  type: "POST",
+			  url: "query.php",
+			  data: $form.serialize(),
+			  success: function(data) {
+			    $result.empty();
+			    $result.append(data);
+			   }
+			});
+		});
+
+		$("li a").on('click', function(e) {
+			//e.preventDefault();
+			var query = $(this).attr("query");
+			$.ajax({
+			  type: "GET",
+			  url: "query.php",
+			  data: {
+			  	"query": query
+			  },
+			  success: function(data) {
+			    $result.empty();
+			    $result.append(data);
+			   }
+			});
+			//return false;
+		});
+	</script>
+
+</body>
+
+</html>
