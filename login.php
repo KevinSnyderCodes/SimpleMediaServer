@@ -10,29 +10,27 @@ if ($_POST['user']) {
 	$user = $_POST['user'];
 	$pass = $_POST['pass'];
 	$query = 'SELECT * FROM User WHERE USERNAME = "' . $user . '" AND PASSWORD = "' . $pass . '";';
-	echo '<p>Username: <span class="code">' . $user . '</span></p>';
+	/*echo '<p>Username: <span class="code">' . $user . '</span></p>';
 	echo '<p>Password: <span class="code">' . $pass . '</span></p>';
-	echo '<p>Query: <span class="code">' . $query . '</span></p>';
-}
-else {
-	die("No match");
-}
-$result = mysqli_query($conn, $query);
-if (!$result) {
-	die("Error: " . mysqli_error($conn));
-}
-else {
-	echo "<p>Ran successfully</p>";
-}
+	echo '<p>Query: <span class="code">' . $query . '</span></p>';*/
 
-// Display results, if any
-db_display_table($result);
+	$result = mysqli_query($conn, $query);
+	if (!$result) {
+		die("Error: " . mysqli_error($conn));
+	}
+	/*else {
+		echo "<p>Ran successfully</p>";
+	}*/
 
-$_SESSION['user'] = $user;
-echo '<p>Session variable set</p>';
+	// Display results, if any
+	/*db_display_table($result);*/
 
-mysqli_free_result($result);
-mysqli_close($conn);
+	$_SESSION['user'] = $user;
+	/*echo '<p>Session variable set</p>';*/
+
+	mysqli_free_result($result);
+	mysqli_close($conn);
+}
 
 include 'header.php';
 
