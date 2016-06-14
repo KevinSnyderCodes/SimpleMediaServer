@@ -8,6 +8,21 @@
 	<link href='https://fonts.googleapis.com/css?family=Roboto:400,300' rel='stylesheet' type='text/css'>
 
 	<style>
+		header {
+			position: relative;
+			text-align: center;
+			border-bottom: 1px solid black;
+		}
+
+		#title a {
+			text-decoration: none;
+			color: black;
+		}
+
+		#title a:hover {
+			color: gray;
+		}
+
 		table, tr, th, td {
 			border: 1px solid black;
 		}
@@ -24,16 +39,28 @@
 
 <body>
 
-	<header style="text-align: center;">
-		<h1>Simple Media Server</h1>
-		<?php
-			if ($_SESSION['user']) {
-				echo '<p>Hello ' . $_SESSION['user'] . '</p>';
-			}
-			else {
-				echo '<p>Hello anon</p>';
-			}
-		?>
+	<header>
+		<div style="float: left;">
+			<form method="GET" action="search.php">
+				<p>
+					<input type="text" name="q" placeholder="">
+					<input type="submit" value="Search">
+				</p>
+			</form>
+		</div>
+		<div style="float: right;">
+			<?php
+				if ($_SESSION['user']) {
+					echo '<p>Hello ' . $_SESSION['user'] . '</p>';
+					echo '<a href="logout.php">Logout</a>';
+				}
+				else {
+					echo '<p>Hello anon</p>';
+					echo '<a href="login.php">Login</a>';
+				}
+			?>
+		</div>
+		<h1 id="title"><a href="/">Simple Media Server</a></h1>
 	</header>
 
 	<div class="container">
