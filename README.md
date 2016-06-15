@@ -8,7 +8,7 @@ simplemediaserver is designed to work with the Bitnami WAMP stack 5.6.22-0, alth
 
 To deploy, pull this repository into your public HTML folder (for Bitnami, this is apache2/htdocs).
 
-## TODO
+## TO-DO
 
 #### General
 
